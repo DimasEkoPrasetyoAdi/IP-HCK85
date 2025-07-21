@@ -4,24 +4,72 @@ const {
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Session extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
+
     static associate(models) {
-      // define association here
+      Session.belongsTo(models.User, { foreignKey: 'host_id' });
+      Session.belongsTo(models.Sport, { foreignKey: 'sport_id' });
+      Session.belongsToMany(models.User, { through: models.SessionParticipant })
     }
   }
-  Session.init({
-    host_id: DataTypes.INTEGER,
-    sport_id: DataTypes.INTEGER,
-    provinsi_id: DataTypes.INTEGER,
-    kabupaten_id: DataTypes.INTEGER,
-    kecamatan_id: DataTypes.INTEGER,
-    session_date: DataTypes.DATE,
-    duration_hours: DataTypes.INTEGER,
-    ai_recommendation: DataTypes.TEXT
+   Session.init({
+    host_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    sport_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    provinsi_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    kabupaten_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    kecamatan_id: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    title: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: { msg: 'Title cannot be empty' },
+        len: {
+          args: [5, 100],
+          msg: 'Title must be between 5 and 100 characters'
+        }
+      }
+    },
+    description: {
+      type: DataTypes.TEXT,
+      allowNull: true 
+    },
+    session_date: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      validate: {
+        isDate: { msg: 'Session date must be a valid date' },
+        isAfter: {
+          args: new Date().toISOString(),
+          msg: 'Session date must be in the future'
+        }
+      }
+    },
+    duration_hours: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        min: { args: 1, msg: 'Minimum duration is 1 hour' },
+        max: { args: 12, msg: 'Maximum duration is 12 hours' }
+      }
+    },
+    ai_recommendation: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    }
   }, {
     sequelize,
     modelName: 'Session',
