@@ -1,20 +1,12 @@
-require('dotenv').config()
-const jwt = require('jsonwebtoken')
-
-
-const JWT_SECRET = process.env.JWT_SECRET
-
-
-
-const signToken = (obj) => {
-  return jwt.sign(obj, JWT_SECRET)
-}
-
-const verifyToken = (token) => {
-  return jwt.verify(token, JWT_SECRET)
-}
+const jwt = require('jsonwebtoken');
+const SECRET = process.env.JWT_SECRET || 'supersecret';
 
 module.exports = {
-  signToken,
-  verifyToken
-}
+  generateToken(payload) {
+    return jwt.sign(payload, SECRET, { expiresIn: '1d' });
+  },
+
+  verifyToken(token) {
+    return jwt.verify(token, SECRET);
+  }
+};

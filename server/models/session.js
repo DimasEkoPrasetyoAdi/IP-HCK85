@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       Session.belongsToMany(models.User, { through: models.SessionParticipant })
     }
   }
-   Session.init({
+  Session.init({
     host_id: {
       type: DataTypes.INTEGER,
       allowNull: false
@@ -45,7 +45,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     description: {
       type: DataTypes.TEXT,
-      allowNull: true 
+      allowNull: true
     },
     session_date: {
       type: DataTypes.DATE,
@@ -69,6 +69,20 @@ module.exports = (sequelize, DataTypes) => {
     ai_recommendation: {
       type: DataTypes.TEXT,
       allowNull: true
+    },
+    max_participants: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      validate: {
+        min: { args: 1, msg: 'Minimum participants is 1' }
+      }
+    },
+    image_url: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      validate: {
+        isUrl: { msg: 'Image URL must be valid' }
+      }
     }
   }, {
     sequelize,
