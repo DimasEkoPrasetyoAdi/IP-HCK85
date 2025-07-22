@@ -1,8 +1,10 @@
-const { Configuration, OpenAIApi } = require('openai');
-const { Session, Sport } = require('../models');
+"use strict";
+require("dotenv").config();
+const { Session, Sport } = require("../models");
 
-const configuration = new Configuration({ apiKey: process.env.OPENAI_API_KEY });
-const openai = new OpenAIApi(configuration);
+const { GoogleGenerativeAI } = require('@google/generative-ai');
+
+const ai = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 class AIController {
   static async generateRecommendation(req, res, next) {
@@ -10,11 +12,11 @@ class AIController {
       const { sessionId } = req.params;
 
       const session = await Session.findByPk(sessionId, {
-        include: [Sport]
+        include: [Sport],
       });
 
       if (!session) {
-        return res.status(404).json({ message: 'Session not found' });
+        return res.status(404).json({ message: "Session not found" });
       }
 
       const sportName = session.Sport.name;
@@ -23,23 +25,22 @@ class AIController {
 
       const prompt = `
 Saya ingin tahu berapa kira-kira total kalori yang dibakar untuk olahraga ${sportName} selama ${duration} jam untuk level intermediate.
-Olahraga ini membakar sekitar ${caloriesPerHour} kalori per jam untuk level intermediate. 
+Olahraga ini membakar sekitar ${caloriesPerHour} kalori per jam untuk level intermediate.
 Berikan jawaban singkat dalam 1 kalimat beserta sedikit saran tentang kesehatan saat berolahraga.
 `;
 
-      const completion = await openai.createChatCompletion({
-        model: 'gpt-3.5-turbo',
-        messages: [{ role: 'user', content: prompt }]
-      });
+      const model = ai.getGenerativeModel({ model: "gemini-pro" });
 
-      const recommendation = completion.data.choices[0].message.content.trim();
+      const result = await model.generateContent(prompt);
+      const response = await result.response;
+      const recommendation = response.text();
 
       session.ai_recommendation = recommendation;
       await session.save();
 
       res.status(200).json({
-        message: 'AI recommendation generated',
-        recommendation
+        message: "AI recommendation generated",
+        recommendation,
       });
     } catch (error) {
       next(error);
@@ -47,4 +48,4 @@ Berikan jawaban singkat dalam 1 kalimat beserta sedikit saran tentang kesehatan 
   }
 }
 
-module.exports = AIController;
+module.exports = AIController
