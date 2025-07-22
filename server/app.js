@@ -23,9 +23,7 @@ app.post('/sessions', SessionController.create);
 app.get('/sessions', SessionController.list);
 app.get('/sessions/:id', SessionController.detail);
 app.delete('/sessions/:id', SessionController.delete);
-
 app.patch('/sessions/:sessionId/ai', AIController.generateRecommendation);
-
 app.post('/participants', ParticipantController.join);
 app.delete('/participants/:session_id', ParticipantController.leave);
 

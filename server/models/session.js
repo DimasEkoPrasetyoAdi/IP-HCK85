@@ -6,9 +6,11 @@ module.exports = (sequelize, DataTypes) => {
   class Session extends Model {
 
     static associate(models) {
-      Session.belongsTo(models.User, { foreignKey: 'host_id' });
+      Session.belongsTo(models.User, { as: 'host', foreignKey: 'host_id' });
       Session.belongsTo(models.Sport, { foreignKey: 'sport_id' });
-      Session.belongsToMany(models.User, { through: models.SessionParticipant })
+      Session.belongsToMany(models.User, { through: models.SessionParticipant,
+        as: 'participants', foreignKey: 'session_id',
+        otherKey: 'user_id' });
     }
   }
   Session.init({
