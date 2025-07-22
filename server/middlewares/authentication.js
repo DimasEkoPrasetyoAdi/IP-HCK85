@@ -1,20 +1,31 @@
-// middlewares/authentication.js
 const { verifyToken } = require('../helpers/jwt');
 const { User } = require('../models');
 
 async function authentication(req, res, next) {
   try {
-    const { access_token } = req.headers;
+    const { authorization } = req.headers
 
-    if (!access_token) {
+
+    if (!authorization) {
       throw { name: 'Unauthorized', message: 'Access token required' };
     }
 
-    const decoded = verifyToken(access_token);
+    
+    const rawToken = authorization.split(' ')
+    const tokenType = rawToken[0] 
+    const tokenValue = rawToken[1] 
 
-    const user = await User.findByPk(decoded.id);
+    
+    if (tokenType !== 'Bearer' || !tokenValue) {
+      throw { name: "Unauthorized", message: "Invalid token" }
+    }
+
+    const result = verifyToken(tokenValue)
+    
+    
+    const user = await User.findByPk(result.id)
     if (!user) {
-      throw { name: 'Unauthorized', message: 'Invalid token' };
+      throw { name: "Unauthorized", message: "Invalid token" }
     }
 
     req.user = {

@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
 
     static associate(models) {
       User.hasMany(models.Session, { foreignKey: 'host_id' })
-      User.belongsTo(models.Session, { through: models.SessionParticipant })
+      User.belongsToMany(models.Session, { through: models.SessionParticipant })
     }
   }
   User.init({
