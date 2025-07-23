@@ -1,11 +1,11 @@
 "use strict";
 require("dotenv").config();
-const { Session, Sport } = require("../models");
 
+
+const { Session, Sport } = require("../models");
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-
 
 class AIController {
   static async generateRecommendation(req, res, next) {
@@ -30,23 +30,31 @@ Olahraga ini membakar sekitar ${caloriesPerHour} kalori per jam untuk level inte
 Berikan jawaban singkat dalam 1 kalimat beserta sedikit saran tentang kesehatan saat berolahraga.
 `;
 
-      const model = ai.getGenerativeModel({ model: "gemini-pro" });
+      const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
+     
+      const chat = model.startChat();
       const result = await model.generateContent(prompt);
-      const response = await result.response;
-      const recommendation = response.text();
+      const response = await result; 
 
-      session.ai_recommendation = recommendation;
+      const text = response?.response?.candidates?.[0]?.content?.parts?.[0]?.text;
+
+      if (!text) {
+        throw new Error("Failed to get AI response text.");
+      }
+
+      session.ai_recommendation = text;
       await session.save();
 
       res.status(200).json({
         message: "AI recommendation generated",
-        recommendation,
+        recommendation: text,
       });
     } catch (error) {
+      console.error("Error generating AI recommendation:", error);
       next(error);
     }
   }
 }
 
-module.exports = AIController
+module.exports = AIController;

@@ -21,21 +21,21 @@ class SessionController {
             });
 
             res.status(201).json(session);
-        } catch (err) {
-            next(err);
+        } catch (error) {
+            next(error);
         }
     }
 
     static async list(req, res, next) {
         try {
             const sessions = await Session.findAll({
-                include: [Sport, 
+                include: [Sport,
                     { model: User, as: 'host', attributes: ['id', 'name'] }
                 ]
             });
             res.json(sessions);
-        } catch (err) {
-            next(err);
+        } catch (error) {
+            next(error);
         }
     }
 
@@ -48,21 +48,60 @@ class SessionController {
             if (!session) throw { name: 'NotFound', message: 'Session not found' }
 
             res.json(session);
-        } catch (err) {
-            next(err);
+        } catch (error) {
+            next(error);
         }
     }
+
+    static async update(req, res, next) {
+        try {
+            const { id } = req.params
+            const {
+                sport_id, provinsi_id, kabupaten_id, kecamatan_id,
+                title, description, session_date, duration_hours
+            } = req.body;
+
+            const session = await Session.findByPk(id);
+
+            if (!session) {
+                return res.status(404).json({ message: "Session not found" });
+            }
+
+            await session.update({
+                sport_id,
+                provinsi_id,
+                kabupaten_id,
+                kecamatan_id,
+                title,
+                description,
+                session_date,
+                duration_hours
+            });
+
+            res.status(200).json(session);
+
+        } catch (error) {
+            next(error);
+        }
+    }
+
 
     static async delete(req, res, next) {
         try {
             const { id } = req.params;
             const session = await Session.findByPk(id);
+
             if (!session) throw { name: 'NotFound', message: 'Session not found' }
 
             await session.destroy();
             res.json({ message: 'Session deleted' });
-        } catch (err) {
-            next(err)
+        } catch (error) {
+            console.error(error)
+            if (error.name === 'NotFound') {
+                return res.status(404).json({ error: error.message });
+            }
+
+            next(error);
         }
     }
 }

@@ -1,18 +1,18 @@
-function errorHandler(err, req, res, next) {
-    console.error(err);
+function errorHandler(error, req, res, next) {
+ 
 
     let code = 500;
     let message = 'Internal server error';
 
-    if (err.name === 'SequelizeValidationError' || err.name === 'SequelizeUniqueConstraintError') {
+    if (error.name === 'SequelizeValidationError' || error.name === 'SequelizeUniqueConstraintError') {
         code = 400;
-        message = err.errors.map(e => e.message).join(', ');
-    } else if (err.name === 'Unauthorized') {
+        message = error.errors.map(e => e.message).join(', ');
+    } else if (error.name === 'Unauthorized') {
         code = 401;
-        message = err.message || 'Unauthorized';
-    } else if (err.name === 'NotFound') {
+        message = error.message || 'Unauthorized';
+    } else if (error.name === 'NotFound') {
         code = 404;
-        message = err.message || 'Resource not found';
+        message = error.message || 'Resource not found';
     }
 
     res.status(code).json({ error: message });

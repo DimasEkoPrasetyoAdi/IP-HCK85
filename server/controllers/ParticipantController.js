@@ -11,8 +11,8 @@ class ParticipantController {
       });
 
       res.status(201).json(participant);
-    } catch (err) {
-      next(err);
+    } catch (error) {
+      next(error);
     }
   }
 
@@ -30,8 +30,8 @@ class ParticipantController {
       if (!count) throw { name: 'NotFound', message: 'Not participating in this session' };
 
       res.json({ message: 'You left the session' });
-    } catch (err) {
-      next(err);
+    } catch (error) {
+      next(error);
     }
   }
 }
