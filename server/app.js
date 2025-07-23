@@ -17,7 +17,7 @@ app.use(express.urlencoded({extended: false}))
 
 app.post('/register', AuthController.register)
 app.post('/login', AuthController.login)
-app.get ('/', PublicController)
+app.get('/pub', PublicController.list)
 
 app.use(authentication)
 app.post('/sessions', SessionController.create)

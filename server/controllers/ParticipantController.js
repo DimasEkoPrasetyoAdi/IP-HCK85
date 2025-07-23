@@ -56,7 +56,7 @@ class ParticipantController {
         });
       }
 
-      // Create participant record
+      
       const [participant] = await sequelize.query(
         'INSERT INTO "SessionParticipants" (session_id, user_id, "createdAt", "updatedAt") VALUES (?, ?, NOW(), NOW()) RETURNING id, session_id, user_id',
         {
