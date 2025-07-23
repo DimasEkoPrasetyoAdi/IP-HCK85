@@ -1,7 +1,6 @@
 "use strict";
 require("dotenv").config();
 
-
 const { Session, Sport } = require("../models");
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 
@@ -30,29 +29,48 @@ Olahraga ini membakar sekitar ${caloriesPerHour} kalori per jam untuk level inte
 Berikan jawaban singkat dalam 1 kalimat beserta sedikit saran tentang kesehatan saat berolahraga.
 `;
 
-      const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+      try {
+        const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+        const result = await model.generateContent(prompt);
+        
+        console.log("Debug - Full Result:", JSON.stringify(result, null, 2));
+        
+        if (!result || !result.response || !result.response.candidates || !result.response.candidates[0]) {
+          throw new Error("No valid response from Gemini API");
+        }
 
-     
-      const chat = model.startChat();
-      const result = await model.generateContent(prompt);
-      const response = await result; 
+        // Get the text from the first candidate's content
+        const text = result.response.candidates[0].content.parts[0].text;
+        console.log("Debug - Generated Text:", text);
+        
+        if (!text) {
+          throw new Error("Empty response from AI");
+        }
 
-      const text = response?.response?.candidates?.[0]?.content?.parts?.[0]?.text;
+        // Update the session with the AI recommendation
+        await session.update({ ai_recommendation: text });
 
-      if (!text) {
-        throw new Error("Failed to get AI response text.");
+        return res.status(200).json({
+          message: "AI recommendation generated successfully",
+          recommendation: text,
+          session_id: sessionId,
+          sport: sportName,
+          duration: duration,
+          calories_per_hour: caloriesPerHour
+        });
+      } catch (aiError) {
+        console.error("Gemini API Error:", aiError);
+        return res.status(500).json({
+          message: "Failed to generate AI recommendation",
+          error: aiError.message
+        });
       }
-
-      session.ai_recommendation = text;
-      await session.save();
-
-      res.status(200).json({
-        message: "AI recommendation generated",
-        recommendation: text,
-      });
     } catch (error) {
-      console.error("Error generating AI recommendation:", error);
-      next(error);
+      console.error("Server Error:", error);
+      return res.status(500).json({
+        message: "Internal server error",
+        error: error.message
+      });
     }
   }
 }
