@@ -1,3 +1,6 @@
+const dotenv = require('dotenv')
+
+dotenv.config()
 
 const SessionController = require('./controllers/sessionController')
 const PublicController = require('./controllers/PublicController')
@@ -10,6 +13,7 @@ const express = require('express')
 const app = express()
 const cors = require('cors')
 
+
 app.use(cors())
 
 app.use(express.json())
@@ -18,6 +22,7 @@ app.use(express.urlencoded({extended: false}))
 app.post('/register', AuthController.register)
 app.post('/login', AuthController.login)
 app.get('/pub', PublicController.list)
+app.post('/google-login', AuthController.googleLogin)
 
 app.use(authentication)
 app.get('/sports', SessionController.SportList)
