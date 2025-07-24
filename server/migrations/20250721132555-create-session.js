@@ -30,15 +30,15 @@ module.exports = {
         onDelete: 'SET NULL'
       },
       provinsi_id: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         allowNull:false
       },
       kabupaten_id: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         allowNull:false
       },
       kecamatan_id: {
-        type: Sequelize.INTEGER
+        type: Sequelize.STRING
       },
       session_date: {
         type: Sequelize.DATE,

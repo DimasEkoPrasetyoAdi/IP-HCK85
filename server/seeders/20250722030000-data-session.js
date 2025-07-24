@@ -7,9 +7,9 @@ module.exports = {
       {
         host_id: 1,
         sport_id: 1,
-        provinsi_id: 11,
-        kabupaten_id: 1101,
-        kecamatan_id: 110101,
+        provinsi_id: "DKI Jakarta",
+        kabupaten_id: "Jakarta Pusat",
+        kecamatan_id: "Gambir",
         title: 'Badminton Morning',
         description: 'Friendly intermediate match',
         session_date: new Date(new Date().getTime() + 86400000), 

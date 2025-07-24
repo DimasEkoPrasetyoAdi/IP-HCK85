@@ -41,7 +41,7 @@ export default function LoginPage() {
                   icon: 'success',
                   confirmButtonText: 'Close'
                 })
-                navigate('/')
+                navigate('/user')
               }
               catch (error) {
                 

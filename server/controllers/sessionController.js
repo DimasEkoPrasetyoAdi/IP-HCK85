@@ -1,4 +1,4 @@
-const { Session, Sport, User } = require('../models')
+const { Session, Sport, User, sequelize, SessionParticipant} = require('../models')
 
 class SessionController {
     static async create(req, res, next) {
@@ -26,14 +26,52 @@ class SessionController {
         }
     }
 
-    static async list(req, res, next) {
+  static async list(req, res, next) {
+    try {
+      const sessions = await Session.findAll({
+        include: [
+          {
+            model: User,
+            as: 'host',
+            attributes: ['id', 'name']
+          },
+          {
+            model: Sport,
+            attributes: ['id', 'name']
+          },
+          {
+            model: User,
+            as: 'participants',
+            attributes: ['id'],
+            through: { attributes: [] }
+          }
+        ],
+        order: [['session_date', 'ASC']]
+      });
+
+      const result = sessions.map(s => {
+        const json = s.toJSON();
+        json.current_participants = json.participants.length;
+        json.joined = json.participants.some(p => p.id === req.user.id);
+        delete json.participants;
+        return json;
+      });
+
+      res.json(result);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+
+
+    static async SportList(req, res, next) {
         try {
-            const sessions = await Session.findAll({
-                include: [Sport,
-                    { model: User, as: 'host', attributes: ['id', 'name'] }
-                ]
-            });
-            res.json(sessions);
+            const sport = await Sport.findAll({
+                attributes: ['id', 'name'],
+                order: [['name', 'ASC']]
+            })
+            res.status(200).json(sport);
         } catch (error) {
             next(error);
         }

@@ -20,6 +20,7 @@ app.post('/login', AuthController.login)
 app.get('/pub', PublicController.list)
 
 app.use(authentication)
+app.get('/sports', SessionController.SportList)
 app.post('/sessions', SessionController.create)
 app.get('/sessions', SessionController.list)
 app.get('/sessions/:id', SessionController.detail)

@@ -4,20 +4,24 @@ const { generateToken } = require('../helpers/jwt');
 
 class AuthController {
   static async register(req, res, next) {
-    try {
-      const { name, email, password } = req.body;
+  try {
+    const { name, email, password } = req.body;
 
-      const user = await User.create({
-        name,
-        email,
-        password: hashPassword(password)
-      });
+    const user = await User.create({
+      name,
+      email,
+      password: hashPassword(password)
+    });
 
-      res.status(201).json({ id: user.id, email: user.email });
-    } catch (err) {
-      next(err);
+    res.status(201).json({ id: user.id, email: user.email });
+  } catch (error) {
+    if (error.name === 'SequelizeUniqueConstraintError') {
+      return res.status(400).json({ message: 'Email sudah terdaftar' });
     }
+    next(err);
   }
+}
+
 
   static async login(req, res, next) {
     try {
@@ -30,8 +34,8 @@ class AuthController {
 
       const access_token = generateToken({ id: user.id, email: user.email });
       res.json({ access_token });
-    } catch (err) {
-      next(err);
+    } catch (error) {
+      next(error);
     }
   }
 }

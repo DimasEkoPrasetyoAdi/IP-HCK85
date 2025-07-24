@@ -23,15 +23,15 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     provinsi_id: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       allowNull: false
     },
     kabupaten_id: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       allowNull: false
     },
     kecamatan_id: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       allowNull: true
     },
     title: {
