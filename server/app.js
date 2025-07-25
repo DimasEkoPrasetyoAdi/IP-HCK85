@@ -1,3 +1,6 @@
+if(process.env.NODE_ENV !== 'Production'){
+    require("dotenv").config();
+}
 const dotenv = require('dotenv')
 
 dotenv.config()
@@ -36,10 +39,6 @@ app.delete('/sessions/:id', SessionController.delete)
 app.patch('/sessions/:sessionId/ai', AIController.generateRecommendation)
 app.post('/participants', ParticipantController.join)
 app.delete('/participants/:session_id', ParticipantController.leave)
-
-const upload = multer ({storage: multer.memoryStorage()})
-app.put('/sessions/:id/image', upload.single('image'), SessionController.uploadImage)
-
 
 
 
