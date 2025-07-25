@@ -53,11 +53,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DATE,
       allowNull: false,
       validate: {
-        isDate: { msg: 'Session date must be a valid date' },
-        isAfter: {
-          args: new Date().toISOString(),
-          msg: 'Session date must be in the future'
-        }
+        isDate: { msg: 'Session date must be a valid date' }
       }
     },
     duration_hours: {

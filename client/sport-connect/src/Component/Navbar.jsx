@@ -1,22 +1,33 @@
-import { NavLink, Link } from "react-router"
+import { Link } from "react-router"
 
 export default function Navbar() {
   return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+    <nav className="navbar navbar-expand-lg navbar-clean">
       <div className="container">
-        <a href="#" className="navbar-brand fw-bold">
+        <Link to="/" className="navbar-brand-clean">
           Sport Connect
-        </a>
-        <div className="ms-auto">
-          <Link to="/login" className="btn btn-outline-primary me-2">
-            Login
-          </Link>
-          <Link to="/register" className="btn btn-primary">
-            Sign Up
-          </Link>
+        </Link>
+        
+        <button 
+          className="navbar-toggler border-0" 
+          type="button" 
+          data-bs-toggle="collapse" 
+          data-bs-target="#navbarNav"
+        >
+          <span className="navbar-toggler-icon"></span>
+        </button>
+        
+        <div className="collapse navbar-collapse" id="navbarNav">
+          <div className="ms-auto d-flex align-items-center gap-2">
+            <Link to="/login" className="btn btn-clean-secondary">
+              Login
+            </Link>
+            <Link to="/register" className="btn btn-clean-primary">
+              Sign Up
+            </Link>
+          </div>
         </div>
       </div>
     </nav>
   )
-
 }

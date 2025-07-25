@@ -67,22 +67,34 @@ export default function UserPage() {
     <div className="d-flex">
       <SideBar />
       <div className="flex-grow-1 p-4">
-        <h3>All Sessions</h3>
-        {loading ? (
-          <p>Loading sessions...</p>
-        ) : (
-          <div className="row">
-            {sessions.length === 0 && <p>Tidak ada sesi ditemukan</p>}
-            {sessions.map((session) => (
-              <SessionCard
-                key={session.id}
-                session={session}
-                onJoin={handleJoinSession}
-                isOwner={session.host?.id === session.userId}
-              />
-            ))}
-          </div>
-        )}
+        <div className="container-fluid">
+          <h3 className="mb-4 fw-bold">All Sessions</h3>
+          {loading ? (
+            <div className="text-center py-5">
+              <div className="spinner-clean mx-auto mb-3"></div>
+              <p className="text-muted">Loading sessions...</p>
+            </div>
+          ) : sessions.length === 0 ? (
+            <div className="text-center py-5">
+              <div className="text-muted">
+                <i className="bi bi-calendar-x display-4 text-muted mb-3"></i>
+                <h4>No Sessions Available</h4>
+                <p>Be the first to create a session!</p>
+              </div>
+            </div>
+          ) : (
+            <div className="sessions-grid">
+              {sessions.map((session) => (
+                <SessionCard
+                  key={session.id}
+                  session={session}
+                  onJoin={handleJoinSession}
+                  isOwner={session.host?.id === session.userId}
+                />
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

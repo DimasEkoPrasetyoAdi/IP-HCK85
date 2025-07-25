@@ -41,7 +41,7 @@ class ParticipantController {
 
       // Check if user already joined
       const existingParticipant = await sequelize.query(
-        'SELECT id, session_id, user_id FROM "SessionParticipants" WHERE session_id = ? AND user_id = ? LIMIT 1',
+        'SELECT session_id, user_id FROM "SessionParticipants" WHERE session_id = ? AND user_id = ? LIMIT 1',
         {
           replacements: [session_id, req.user.id],
           type: sequelize.QueryTypes.SELECT,
@@ -58,7 +58,7 @@ class ParticipantController {
 
       
       const [participant] = await sequelize.query(
-        'INSERT INTO "SessionParticipants" (session_id, user_id, "createdAt", "updatedAt") VALUES (?, ?, NOW(), NOW()) RETURNING id, session_id, user_id',
+        'INSERT INTO "SessionParticipants" (session_id, user_id, "createdAt", "updatedAt") VALUES (?, ?, NOW(), NOW()) RETURNING session_id, user_id',
         {
           replacements: [session_id, req.user.id],
           type: sequelize.QueryTypes.INSERT,

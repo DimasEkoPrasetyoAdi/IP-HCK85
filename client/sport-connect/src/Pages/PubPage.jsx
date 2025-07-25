@@ -31,32 +31,52 @@ export default function PubPage() {
         <div className="min-vh-100 d-flex flex-column">
             <Navbar />
 
+            {/* Simple Hero Section */}
+            <div className="bg-cyan text-white py-5 mt-0">
+                <div className="container text-center">
+                    <h1 className="fw-bold mb-3">Sport Connect</h1>
+                    <p className="lead mb-0">Find and join sports sessions in your area</p>
+                </div>
+            </div>
+
+            {/* Sessions Section */}
             <div className="container py-5">
                 <div className="row">
                     <div className="col-12 mb-4">
-                        <h1 className="text-center mb-4">Welcome to Sport Connect</h1>
-                        <p className="text-center text-muted">
-                            Find and join sports sessions in your area
+                        <h2 className="fw-bold mb-1">Available Sessions</h2>
+                        <p className="text-muted">
+                            {sessions.length} sessions available
                         </p>
                     </div>
                 </div>
 
                 {loading ? (
-                    <div className="text-center">
-                        <div className="spinner-border text-primary" role="status">
-                            <span className="visually-hidden">Loading...</span>
+                    <div className="text-center py-5">
+                        <div className="spinner-clean mx-auto mb-3"></div>
+                        <p className="text-muted">Loading sessions...</p>
+                    </div>
+                ) : sessions.length === 0 ? (
+                    <div className="text-center py-5">
+                        <div className="text-muted">
+                            <h4>No Sessions Available</h4>
+                            <p>Be the first to create a session!</p>
                         </div>
                     </div>
                 ) : (
-                    <div className="row g-4">
+                    <div className="sessions-grid">
                         {sessions.map((session) => (
-                            <SessionCard key={session.id} session={session} />
+                            <SessionCard
+                                key={session.id}
+                                session={session}
+                                requireLoginRedirect={true}
+                            />
                         ))}
                     </div>
                 )}
             </div>
 
-            <footer className="mt-auto py-4 bg-light">
+            {/* Simple Footer */}
+            <footer className="bg-light py-4 mt-auto border-top">
                 <div className="container text-center">
                     <p className="text-muted mb-0">
                         &copy; 2025 Sport Connect. All rights reserved.

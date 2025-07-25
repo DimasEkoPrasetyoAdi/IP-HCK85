@@ -138,7 +138,7 @@ export default function SessionForm({ type = "add" }) {
 
     try {
       if (type === "edit") {
-        await http.patch(`/sessions/${id}`, formData, {
+        await http.put(`/sessions/${id}`, formData, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("access_token")}`,
           },
@@ -307,7 +307,7 @@ export default function SessionForm({ type = "add" }) {
 
         <button
           type="submit"
-          className="btn btn-primary"
+          className="btn btn-cyan px-4 py-2 fw-medium"
           disabled={loading}
         >
           {loading

@@ -10,6 +10,13 @@ class AuthController {
     try {
       const { name, email, password } = req.body;
 
+      // Validate required fields
+      if (!name || !email || !password) {
+        return res.status(400).json({ 
+          message: 'Name, email, and password are required' 
+        });
+      }
+
       const user = await User.create({
         name,
         email,
@@ -21,7 +28,7 @@ class AuthController {
       if (error.name === 'SequelizeUniqueConstraintError') {
         return res.status(400).json({ message: 'Email sudah terdaftar' });
       }
-      next(err);
+      next(error);
     }
   }
 

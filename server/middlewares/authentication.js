@@ -30,12 +30,6 @@ async function authentication(req, res, next) {
       name: user.name
     };
 
-    req.user = {
-      id: user.id,
-      email: user.email,
-      name: user.name
-    };
-
     next();
   } catch (error) {
     next(error);

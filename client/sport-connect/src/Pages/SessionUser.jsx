@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import http from "../lib/http";
 import Swal from "sweetalert2";
-import SessionCard from "../component/SessionCard";
+import SessionCard from "../Component/SessionCard";
+import SideBar from "../Component/SideBar";
 import { useNavigate } from "react-router";
 
 export default function SessionUpdate() {
@@ -65,22 +66,34 @@ export default function SessionUpdate() {
   };
 
   return (
-    <div className="container mt-4">
-      <h2>Session Saya</h2>
-      <div className="d-flex flex-wrap">
-        {sessions.length > 0 ? (
-          sessions.map((session) => (
-            <SessionCard
-              key={session.id}
-              session={session}
-              onEdit={() => handleEdit(session)}
-              onDelete={() => handleDelete(session)}
-              isOwner={true}
-            />
-          ))
-        ) : (
-          <p>Kamu belum memiliki session.</p>
-        )}
+    <div className="d-flex min-vh-100">
+      <SideBar />
+      <div className="flex-grow-1 p-4">
+        <div className="container-fluid">
+          <h2 className="mb-4 fw-bold">Session Saya</h2>
+
+          {sessions.length > 0 ? (
+            <div className="sessions-grid">
+              {sessions.map((session) => (
+                <SessionCard
+                  key={session.id}
+                  session={session}
+                  onEdit={() => handleEdit(session)}
+                  onDelete={() => handleDelete(session)}
+                  isOwner={true}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-5">
+              <div className="text-muted">
+                <i className="bi bi-calendar-plus display-4 text-muted mb-3"></i>
+                <h4>Kamu belum memiliki session</h4>
+                <p>Mulai buat session pertamamu!</p>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

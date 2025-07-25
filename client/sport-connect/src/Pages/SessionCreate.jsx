@@ -6,6 +6,9 @@ import { useNavigate } from "react-router";
 export default function SessionCreate(props) {
  
     return (
-        <FormSession type='add' />
+        <div className="d-flex">
+            <SideBar />
+            <FormSession type='add' />
+        </div>
     );
 }
